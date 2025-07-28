@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vasilagkos Dimitrios - Portfolio</title>
+    <link rel="icon"  type="image/png" href="assets/favicon3.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lora&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Lora', sans-serif;
+            background-color: #1a1a1a; /* Dark background */
+            color: #f8f9fa; /* Light text */
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+
+        /* Top Bar Styling */
+        .top-bar {
+            display: flex;
+            /* Distribute items with space between them */
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background-color: #1a1a1a;
+            color: #f8f9fa;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .top-bar .nav-links {
+            flex: 1; /* Equal flex to balance with social-icons */
+            display: flex;
+            justify-content: flex-start; /* Align links to the left */
+        }
+
+        .top-bar .nav-links a {
+            color: #f8f9fa;
+            text-decoration: none;
+            margin-right: 30px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            transition: color 0.3s ease;
+        }
+
+        .top-bar .nav-links a:hover {
+            color: #cccccc; /* Slightly lighter on hover */
+        }
+
+        .top-bar .central-name {
+            flex: 1; /* Equal flex to center it properly */
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center; /* Center the text within its container */
+            white-space: nowrap; /* Prevent wrapping if name is long */
+        }
+
+        .top-bar .social-icons {
+            flex: 1; /* Equal flex to balance with nav-links */
+            display: flex;
+            justify-content: flex-end; /* Align social icons to the right */
+        }
+
+        .top-bar .social-icons a {
+            color: #f8f9fa;
+            margin-left: 20px;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+
+        .top-bar .social-icons a:hover {
+            color: #cccccc;
+        }
+
+        /* Portfolio Grid Styling */
+        .portfolio-grid {
+            padding: 20px 40px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 5px; /* Added a very small space between grid items */
+        }
+
+        .portfolio-item {
+            position: relative;
+            overflow: hidden;
+            background-color: #333; /* Darker background for items */
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .portfolio-item:hover {
+            transform: scale(1.01); /* Subtle zoom on hover */
+        }
+
+        .portfolio-item img {
+            width: 100%;
+            height: 100%; /* Adjust height as needed, or use object-fit */
+            display: block;
+            object-fit: cover; /* Ensures images cover the area without distortion */
+            filter: brightness(0.7); /* Darken image slightly */
+            transition: filter 0.3s ease;
+        }
+
+        .portfolio-item:hover img {
+            filter: brightness(0.3); /* Darken more on hover */
+        }
+
+        .portfolio-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px;
+            color: #fff;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: flex-start;
+            opacity: 0; /* Initially hidden */
+            transition: opacity 0.3s ease; /* Smooth transition for opacity */
+        }
+
+        .portfolio-item:hover .portfolio-overlay {
+            opacity: 1; /* Appear on hover */
+        }
+
+        .portfolio-overlay h4 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+        }
+
+        .portfolio-overlay p {
+            font-size: 1rem;
+            color: #ccc;
+            margin-bottom: 0;
+        }
+
+        /* Project Detail Section and About/Contact Section */
+        .project-detail-section {
+            padding: 20px 40px;
+            display: none; /* Hidden by default */
+            min-height: calc(100vh - 80px); /* Adjust based on top-bar height */
+        }
+
+        .project-detail-section .project-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-top: 50px; /* Space from top bar */
+        }
+
+        .project-detail-section .project-header h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #f8f9fa;
+            margin-bottom: 10px;
+        }
+
+        .project-detail-section .project-header p {
+            font-size: 1.2rem;
+            color: #cccccc;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .project-detail-section .project-image {
+            width: 100%;
+            height: auto;
+            max-height: 70vh; /* Limit height for large images */
+            object-fit: contain; /* Ensure full image is visible */
+            display: block;
+            margin: 40px auto;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        /* Form Styling */
+        .contact-form .form-label {
+            color: #f8f9fa; /* Light label text */
+        }
+        .contact-form .form-control {
+            background-color: #333; /* Darker input background */
+            border: 1px solid #555; /* Subtle border */
+            color: #f8f9fa; /* Light input text */
+            border-radius: 5px;
+            padding: 10px;
+        }
+        .contact-form .form-control::placeholder {
+            color: #aaaaaa; /* Lighter placeholder text */
+        }
+        .contact-form .form-control:focus {
+            background-color: #444; /* Slightly lighter on focus */
+            border-color: #007bff; /* Bootstrap primary blue border on focus */
+            box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+            color: #f8f9fa;
+        }
+        .contact-form .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            border-radius: 50px; /* Pill-shaped buttons */
+            padding: 10px 30px;
+            font-weight: 600;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        .contact-form .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+
+        /* New Contact Info Section Styling */
+        .contact-info-card {
+            background-color: #2a2a2a; /* Slightly lighter dark background */
+            border-radius: 8px;
+            padding: 30px;
+            margin-top: 30px;
+            margin-bottom: 50px; /* Space between contact info and form */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .contact-info-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .contact-info-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .contact-info-item .icon {
+            font-size: 1.8rem;
+            color: #f8f9fa; /* Changed to white/light */
+            margin-right: 15px;
+            width: 30px; /* Fixed width for alignment */
+            text-align: center;
+        }
+
+        .contact-info-item .text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .contact-info-item .text a {
+            color: #f8f9fa; /* Light text for links */
+            text-decoration: none;
+            font-size: 1.1rem;
+            margin-bottom: 2px;
+            transition: color 0.3s ease;
+        }
+
+        .contact-info-item .text a:hover {
+            color: #007bff; /* Highlight on hover */
+        }
+
+        .contact-info-item .text span {
+            font-size: 0.9rem;
+            color: #aaaaaa; /* Lighter grey for descriptions */
+        }
+
+        .contact-info-item .text .click-here {
+            color: #dc3545; /* Red for "Click here" to stand out */
+            font-weight: 600;
+            margin-left: 5px;
+            text-decoration: underline;
+        }
+        .contact-info-item .text .click-here:hover {
+            color: #ff6347; /* Lighter red on hover */
+        }
+
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .top-bar {
+                flex-direction: column;
+                padding: 15px 20px;
+                /* Center content when stacked vertically */
+                align-items: center;
+            }
+            .top-bar .nav-links,
+            .top-bar .central-name,
+            .top-bar .social-icons {
+                width: 100%; /* Take full width */
+                text-align: center; /* Center text within their own containers */
+                flex: none; /* Remove flex properties on mobile */
+            }
+            .top-bar .nav-links {
+                margin-bottom: 10px;
+                justify-content: center; /* Center the nav links */
+            }
+            .top-bar .nav-links a {
+                margin: 0 15px; /* Adjust margin for mobile links */
+            }
+            .top-bar .central-name {
+                font-size: 1.2rem;
+                margin-bottom: 10px;
+            }
+            .top-bar .social-icons {
+                margin-top: 10px;
+                justify-content: center; /* Center the social icons */
+            }
+            .top-bar .social-icons a {
+                margin: 0 10px; /* Adjust margin for mobile icons */
+            }
+            .portfolio-grid {
+                grid-template-columns: 1fr; /* Single column on small screens */
+                padding: 20px;
+            }
+            .portfolio-overlay h4 {
+                font-size: 1.5rem;
+            }
+            .project-detail-section {
+                padding: 20px;
+            }
+            .project-detail-section .project-header h2 {
+                font-size: 2.2rem;
+            }
+            .project-detail-section .project-header p {
+                font-size: 1rem;
+            }
+            .contact-info-card {
+                padding: 20px; /* Adjust padding for smaller screens */
+            }
+            .contact-info-item .icon {
+                font-size: 1.5rem;
+                margin-right: 10px;
+            }
+            .contact-info-item .text a {
+                font-size: 1rem;
+            }
+            .contact-info-item .text span {
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="top-bar">
+        <div class="nav-links">
+            <a href="#" id="workLink">WORK</a>
+            <a href="#" id="aboutContactLink">CONTACT</a>
+        </div>
+        <div class="central-name">VASILAGKOS DIMITRIOS</div> <div class="social-icons">
+            <a href="https://www.linkedin.com/in/dimitris-vasilagos-13895b123" target="_blank"><i class="fab fa-linkedin"></i></a>
+        </div>
+    </header>
+
+    <main id="portfolioGridSection" class="portfolio-grid">
+        <div class="portfolio-item" data-project-id="1">
+            <img src="assets/projects/1.Energy_Concept_2025/1_Cover.jpg" alt="Concept design for a pilot retail space in the energy sector">
+            <div class="portfolio-overlay">
+                <h4>Energy Concept</h4>
+                <p>2025</p>
+            </div>
+        </div>
+        <div class="portfolio-item" data-project-id="2">
+            <img src="assets/projects/2.Food_Spot_2025/1_Cover.jpg" alt="Food Spot">
+            <div class="portfolio-overlay">
+                <h4>Food Spot</h4>
+                <p>2025</p>
+            </div>
+        </div>
+        <div class="portfolio-item" data-project-id="3">
+            <img src="assets/projects/3.Retail_Façade_2022-2025/1_Cover.jpg" alt="Retail Facade">
+            <div class="portfolio-overlay">
+                <h4>Retail Facade</h4>
+                <p>2022-2025</p>
+            </div>
+        </div>
+        <div class="portfolio-item" data-project-id="4">
+            <img src="assets/projects/4.Retail_Interior_2021-2025/1_Cover.jpg" alt="Retail Interior">
+            <div class="portfolio-overlay">
+                <h4>Retail Interior</h4>
+                <p>2021-2025</p>
+            </div>
+        </div>
+        <div class="portfolio-item" data-project-id="5">
+            <img src="assets/projects/5.Timeless_Dining_2024/1_Cover.png" alt="Timeless Dining">
+            <div class="portfolio-overlay">
+                <h4>Timeless Dining</h4>
+                <p>2024</p>
+            </div>
+        </div>
+        <div class="portfolio-item" data-project-id="6">
+            <img src="assets/projects/6.Retail_Prototype_2024/1_Cover.jpg" alt="Retail Prototype">
+            <div class="portfolio-overlay">
+                <h4>Retail Prototype</h4>
+                <p>2024</p>
+            </div>
+        </div>
+
+        <div class="portfolio-item" data-project-id="7">
+            <img src="assets/projects/7.Residential_Interior_2024/1_Cover.jpg" alt="Residential Interior">
+            <div class="portfolio-overlay">
+                <h4>Residential Interior</h4>
+                <p>2024</p>
+            </div>
+        </div>
+        <div class="portfolio-item" data-project-id="8">
+            <img src="assets/projects/8.Residential_Garden_2024/1_Cover.jpg" alt="Residential Garden">
+            <div class="portfolio-overlay">
+                <h4>Residential Garden</h4>
+                <p>2024</p>
+            </div>
+        </div>
+
+
+        <div class="portfolio-item" data-project-id="9">
+            <img src="assets/projects/9.Workplace_Upgrade_2023/1_Cover.jpg" alt="Workplace Upgrade">
+            <div class="portfolio-overlay">
+                <h4>Workplace Upgrade</h4>
+                <p>2023</p>
+            </div>
+        </div>
+        <div class="portfolio-item" data-project-id="10">
+            <img src="assets/projects/10.Stadium_Outlet_2022/1_Cover.jpg" alt="Stadium Outlet">
+            <div class="portfolio-overlay">
+                <h4>Stadium Outlet</h4>
+                <p>2022</p>
+            </div>
+        </div>
+
+
+        <div class="portfolio-item" data-project-id="11">
+            <img src="assets/projects/11.Interactive_Retail_2021/2_Cover.png" alt="Interactive Retail">
+            <div class="portfolio-overlay">
+                <h4>Interactive Retail</h4>
+                <p>2021</p>
+            </div>
+        </div>
+        <div class="portfolio-item" data-project-id="12">
+            <img src="assets/projects/12.Play_Concept_2021/1_Cover.jpg" alt="Play Concept">
+            <div class="portfolio-overlay">
+                <h4>Play Concept</h4>
+                <p>2021</p>
+            </div>
+        </div>
+
+    </main>
+
+    <section id="projectDetailSection" class="project-detail-section">
+        <div class="project-header">
+            <h2 id="projectTitle"></h2>
+            <i><p id="projectDescription"></p></i>
+            <p id="projectDate"></p>
+        </div>
+        <div id="projectImagesContainer">
+            </div>
+        <div class="text-center mt-5">
+            <button id="backToWorkBtn" class="btn btn-outline-light btn-lg" style="border-radius: 50px; padding: 10px 30px;">BACK TO WORK</button>
+        </div>
+    </section>
+
+
+    <section id="aboutContactSection" class="project-detail-section" style="display: none;">
+        <div class="project-header">
+            <h2>CONTACT</h2>
+            <p class="mb-5">
+                Feel free to reach out to me for collaborations, inquiries, or just to say hello!
+            </p>
+
+            <div class="row justify-content-center">
+                <div class="col-lg-4">
+                    <div class="contact-info-card">
+                        <div class="contact-info-item">
+                            <i class="fas fa-phone-alt icon"></i>
+                            <div class="text">
+                                <a href="tel:+1234567890">+30 698 614 3706</a>
+                            </div>
+                        </div>
+                        <div class="contact-info-item">
+                            <i class="fas fa-envelope icon"></i>
+                            <div class="text">
+                                <a href="mailto:dvasilagkos@gmail.com">dvasilagkos@gmail.com</a>
+                            </div>
+                        </div>
+                        <div class="contact-info-item">
+                            <i class="fab fa-linkedin icon"></i>
+                            <div class="text">
+                                <a href="https://www.linkedin.com/in/dimitris-vasilagos-13895b123/" target="_blank">dimitris-vasilagos-13895b123</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <div class="text-center mt-5">
+            <button id="backToWorkBtnAbout" class="btn btn-outline-light btn-lg" style="border-radius: 50px; padding: 10px 30px;">BACK TO WORK</button>
+        </div>
+    </section>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const portfolioGridSection = document.getElementById('portfolioGridSection');
+            const projectDetailSection = document.getElementById('projectDetailSection');
+            const aboutContactSection = document.getElementById('aboutContactSection');
+            const projectTitle = document.getElementById('projectTitle');
+            const projectDescription = document.getElementById('projectDescription');
+            const projectDate = document.getElementById('projectDate');
+            const projectImagesContainer = document.getElementById('projectImagesContainer'); // New container for multiple images
+            const backToWorkBtn = document.getElementById('backToWorkBtn');
+            const backToWorkBtnAbout = document.getElementById('backToWorkBtnAbout');
+            const workLink = document.getElementById('workLink');
+            const aboutContactLink = document.getElementById('aboutContactLink');
+
+            // Sample project data (you would replace this with real data)
+            const projects = {
+                1: {
+                    title: "Energy Concept",
+                    description: "Concept design for a pilot retail space in the energy sector",
+                    date: "2025",
+                    images: [
+                        "assets/projects/1.Energy_Concept_2025/1_Cover.jpg",
+                        "assets/projects/1.Energy_Concept_2025/2.jpg",
+                        "assets/projects/1.Energy_Concept_2025/3.jpg",
+                        "assets/projects/1.Energy_Concept_2025/4.jpg",
+                        "assets/projects/1.Energy_Concept_2025/5.jpg",
+                        "assets/projects/1.Energy_Concept_2025/6.jpg"
+                    ]
+                },
+                2: {
+                    title: "Food Spot",
+                    description: "Renovation of a fast-casual dining venue in an urban corner plot",
+                    date: "2025",
+                    images: [
+                        "assets/projects/2.Food_Spot_2025/1_Cover.jpg",
+                        "assets/projects/2.Food_Spot_2025/2.jpg",
+                        "assets/projects/2.Food_Spot_2025/3.jpg",
+                        "assets/projects/2.Food_Spot_2025/4.jpg",
+                        "assets/projects/2.Food_Spot_2025/5.jpg",
+                    ]
+                },
+                3: {
+                    title: "Retail Facade",
+                    description: "Design upgrade of commercial storefronts with emphasis on brand visibility and architectural expression",
+                    date: "2022-2025",
+                    images: [
+                        "assets/projects/3.Retail_Façade_2022-2025/1_Cover.jpg",
+                        "assets/projects/3.Retail_Façade_2022-2025/2.jpg",
+                        "assets/projects/3.Retail_Façade_2022-2025/3.jpg",
+                        "assets/projects/3.Retail_Façade_2022-2025/4.jpg",
+                        "assets/projects/3.Retail_Façade_2022-2025/5.jpg",
+                        "assets/projects/3.Retail_Façade_2022-2025/6.jpg",
+                    ]
+                },
+                4: {
+                    title: "Retail Interior",
+                    description: "Renovation and spatial reconfiguration of commercial interiors for enhanced customer experience",
+                    date: "2021-2025",
+                    images: [
+                        "assets/projects/4.Retail_Interior_2021-2025/1_Cover.jpg",
+                        "assets/projects/4.Retail_Interior_2021-2025/2.jpg",
+                        "assets/projects/4.Retail_Interior_2021-2025/3.jpg",
+                        "assets/projects/4.Retail_Interior_2021-2025/4.jpg",
+                        "assets/projects/4.Retail_Interior_2021-2025/5.jpg",
+                        "assets/projects/4.Retail_Interior_2021-2025/6.jpg",
+                        "assets/projects/4.Retail_Interior_2021-2025/7.jpg"
+                    ]
+                },
+                5: {
+                    title: "Timeless Dining",
+                    description: "Renovation of a village restaurant combining contemporary design with enduring local character",
+                    date: "2024",
+                    images: [
+                        "assets/projects/5.Timeless_Dining_2024/1_Cover.png",
+                        "assets/projects/5.Timeless_Dining_2024/2.png",
+                        "assets/projects/5.Timeless_Dining_2024/3.png",
+                        "assets/projects/5.Timeless_Dining_2024/4.png",
+                        "assets/projects/5.Timeless_Dining_2024/5.png",
+                        "assets/projects/5.Timeless_Dining_2024/6.png",
+                    ]
+                },
+                6: {
+                    title: "Retail Prototype",
+                    description: "Concept design for a pilot store focusing on furniture, product display and spatial identity",
+                    date: "2024",
+                    images: [
+                        "assets/projects/6.Retail_Prototype_2024/1_Cover.jpg",
+                        "assets/projects/6.Retail_Prototype_2024/2.jpg",
+                        "assets/projects/6.Retail_Prototype_2024/3.jpg",
+                        "assets/projects/6.Retail_Prototype_2024/4.jpg",
+                        "assets/projects/6.Retail_Prototype_2024/5.jpg",
+                        "assets/projects/6.Retail_Prototype_2024/6.jpg",
+                    ]
+                },
+                7: {
+                    title: "Residential Interior",
+                    description: "Renovation of a city apartment with emphasis on material warmth and spatial efficiency",
+                    date: "2024",
+                    images: [
+                        "assets/projects/7.Residential_Interior_2024/1_Cover.jpg",
+                        "assets/projects/7.Residential_Interior_2024/2.jpg",
+                        "assets/projects/7.Residential_Interior_2024/3.jpg",
+                        "assets/projects/7.Residential_Interior_2024/4.jpg",
+                        "assets/projects/7.Residential_Interior_2024/5.jpg",
+                        "assets/projects/7.Residential_Interior_2024/6.jpg",
+                    ]
+                },
+                8: {
+                    title: "Residential Garden",
+                    description: "Transformation of a private exterior into a calm and structured living extension",
+                    date: "2024",
+                    images: [
+                        "assets/projects/8.Residential_Garden_2024/1_Cover.jpg",
+                        "assets/projects/8.Residential_Garden_2024/2.jpg",
+                        "assets/projects/8.Residential_Garden_2024/3.jpg",
+                        "assets/projects/8.Residential_Garden_2024/4.jpg",
+                        "assets/projects/8.Residential_Garden_2024/5.jpg",
+                    ]
+                },
+                9: {
+                    title: "Workplace Upgrade",
+                    description: "Redesign of office areas aiming at increased functionality, collaboration, and employee well-being",
+                    date: "2023",
+                    images: [
+                        "assets/projects/9.Workplace_Upgrade_2023/1_Cover.jpg",
+                        "assets/projects/9.Workplace_Upgrade_2023/2.jpg",
+                        "assets/projects/9.Workplace_Upgrade_2023/3.jpg",
+                        "assets/projects/9.Workplace_Upgrade_2023/4.jpg",
+                        "assets/projects/9.Workplace_Upgrade_2023/5.jpg",
+                        "assets/projects/9.Workplace_Upgrade_2023/6.jpg",
+                    ]
+                },
+                10: {
+                    title: "Stadium Outlet",
+                    description: "Redesign of a flagship retail store within a major stadium, focusing on brand experience and fan engagement",
+                    date: "2022",
+                    images: [
+                        "assets/projects/10.Stadium_Outlet_2022/1_Cover.jpg",
+                        "assets/projects/10.Stadium_Outlet_2022/2.jpg",
+                        "assets/projects/10.Stadium_Outlet_2022/3.jpg",
+                        "assets/projects/10.Stadium_Outlet_2022/4.jpg",
+                        "assets/projects/10.Stadium_Outlet_2022/5.jpg",
+                        "assets/projects/10.Stadium_Outlet_2022/6.jpg",
+                    ]
+                },
+                11: {
+                    title: "Interactive Retail",
+                    description: "Concept for an interactive retail space integrating digital displays and personalized product experiences",
+                    date: "2021",
+                    images: [
+                        "assets/projects/11.Interactive_Retail_2021/1_Cover.jpg",
+                        "assets/projects/11.Interactive_Retail_2021/2.png",
+                        "assets/projects/11.Interactive_Retail_2021/3.png",
+                        "assets/projects/11.Interactive_Retail_2021/4.png",
+                        "assets/projects/11.Interactive_Retail_2021/5.png",
+                        "assets/projects/11.Interactive_Retail_2021/6.png",
+                    ]
+                },
+                12: {
+                    title: "Play Concept",
+                    description: "Visionary design for a modern playground, prioritizing safety, inclusivity, and stimulating play",
+                    date: "2021",
+                    images: [
+                        "assets/projects/12.Play_Concept_2021/1_Cover.jpg",
+                        "assets/projects/12.Play_Concept_2021/2.jpg",
+                        "assets/projects/12.Play_Concept_2021/3.jpg",
+                        "assets/projects/12.Play_Concept_2021/4.jpg",
+                        "assets/projects/12.Play_Concept_2021/5.jpg",
+                        "assets/projects/12.Play_Concept_2021/6.jpg",
+                    ]
+                }
+            };
+
+
+            document.querySelectorAll('.portfolio-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const projectId = this.dataset.projectId;
+                    const project = projects[projectId];
+
+                    if (project) {
+                        projectTitle.textContent = project.title;
+                        projectDescription.textContent = project.description;
+                        projectDate.textContent = project.date;
+
+                        // Clear previous images
+                        projectImagesContainer.innerHTML = '';
+
+                        // Add new images
+                        project.images.forEach(imageSrc => {
+                            const img = document.createElement('img');
+                            img.src = imageSrc;
+                            img.alt = project.title;
+                            img.classList.add('project-image', 'img-fluid'); // Added img-fluid for responsiveness
+                            projectImagesContainer.appendChild(img);
+                        });
+
+                        portfolioGridSection.style.display = 'none';
+                        aboutContactSection.style.display = 'none'; // Ensure contact section is hidden
+                        projectDetailSection.style.display = 'block';
+                        window.scrollTo(0, 0); // Scroll to top of the page
+                    }
+                });
+            });
+
+            backToWorkBtn.addEventListener('click', function() {
+                projectDetailSection.style.display = 'none';
+                portfolioGridSection.style.display = 'grid'; // Re-show as grid
+                window.scrollTo(0, 0); // Scroll to top of the page
+            });
+
+            backToWorkBtnAbout.addEventListener('click', function() {
+                aboutContactSection.style.display = 'none';
+                portfolioGridSection.style.display = 'grid'; // Re-show as grid
+                window.scrollTo(0, 0); // Scroll to top of the page
+            });
+
+            workLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                projectDetailSection.style.display = 'none';
+                aboutContactSection.style.display = 'none';
+                portfolioGridSection.style.display = 'grid'; // Re-show as grid
+                window.scrollTo(0, 0);
+            });
+
+            aboutContactLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                portfolioGridSection.style.display = 'none';
+                projectDetailSection.style.display = 'none';
+                aboutContactSection.style.display = 'block';
+                window.scrollTo(0, 0);
+            });
+        });
+    </script>
+</body>
+</html>
